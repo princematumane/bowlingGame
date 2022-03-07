@@ -44,7 +44,7 @@ namespace BowlingGame.Web.Controllers
             if (!_bowlingGame.Contestants.Any())
             {
                 _bowlingGame.Contestants = contestantList
-                                            .Select(x => new Models.BowlingContestant { ContestantName = x.Name } )
+                                            .Select(x => new Models.BowlingContestant { ContestantName = x.ContestantName } )
                                             .Cast<IContestant>()
                                             .ToList();
                 return Ok(true);

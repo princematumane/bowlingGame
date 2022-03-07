@@ -74,7 +74,7 @@ class Game extends React.Component<Props, State> {
   data = (contestants: IContestantInfo[]) => {
 
     if(this.state.currentPlayingContestant.index >= contestants.length){
-
+        window.location.href ="/LeaderBoard"
         return <>
         All members played
         </>
@@ -105,7 +105,7 @@ class Game extends React.Component<Props, State> {
                         })
                         var cState = { ...this.state.currentPlayingContestant };
                         cState.rolls.push(pin);
-                        cState.remainingPins -= pin;
+                        cState.remainingPins -= (pin);
                         cState.numberOfTimesPlayed++;
                         this.setTotalPins(cState.remainingPins)
                         this.setState(

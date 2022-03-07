@@ -18,7 +18,7 @@ namespace BowlingGame.Web.Extensions
         /// <returns>The amount of pins that can be thrown on next throw, -1 if player game is done</returns>
         public static int Roll(this IContest contest, Roll rollInput)
         {
-            IContestant contestant = contest.Contestants.FirstOrDefault(x => x.ContestantName == rollInput.Name);
+            IContestant contestant = contest.Contestants.FirstOrDefault(x => x.ContestantName == rollInput.ContestantName);
             int pins = 0;
             if (!contestant.IsInstanceComplete)
                 pins = contestant.Roll(rollInput.PinsKnocked);
@@ -28,7 +28,7 @@ namespace BowlingGame.Web.Extensions
 
         public static IEnumerable<LeaderboardData> GetLeaderboard(this IContest contest)
         {
-            return contest.Contestants.Select(x => new LeaderboardData { Name = x.ContestantName, Score = x.GetScore(), ScoreFrame = x.GetLastScoredFrame() }).OrderByDescending(x => x.Score);
+            return contest.Contestants.Select(x => new LeaderboardData { ContestantName = x.ContestantName, Score = x.GetScore(), ScoreFrame = x.GetLastScoredFrame() }).OrderByDescending(x => x.Score);
         }
 
         public static void Reset(this IContest contest)
