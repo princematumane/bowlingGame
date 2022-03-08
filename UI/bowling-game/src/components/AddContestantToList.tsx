@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { IState as Props } from "./Pages/Home";
-import { api } from '../Services/ApiService';
 import { IContestant } from '../Interfaces/Interfaces';
 
 interface IProps {
@@ -55,7 +53,7 @@ const AddContestantToList: React.FC<IProps> = ({setContestant, contestant}) => {
             />
             {(contestant.length > 0) ? <div className='success-message'>
                 {contestant.map((x,i)=>{
-                    return <><span className='success-text'>{i+1}. {x.contestantName} Added</span><br /></>
+                    return <><span key={i+x.contestantName} className='success-text'>{i+1}. {x.contestantName} Added</span><br /></>
                 })}
             </div> : null}
             <button

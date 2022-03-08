@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "../../App.css";
 import { api } from "../../Services/ApiService";
 import AddContestantToList from "../AddContestantToList";
-import { IContestant, IFrame } from "../../Interfaces/Interfaces";
+import { IContestant } from "../../Interfaces/Interfaces";
+import Constants from "../../Config/Constant";
 
 export interface IState {
   contestant:IContestant[];
@@ -30,7 +31,7 @@ const Home = () => {
     <div className="App">
       <h1>Welcome to bowling game!!</h1>
       <h4>Have fun!!</h4>
-      {contestant.length > 1 ? (
+      {contestant.length >= Constants.MIN_PLAYERS ? (
         <button onClick={handleResetGame} className="AddToList-btn">
           Reset Game
         </button>

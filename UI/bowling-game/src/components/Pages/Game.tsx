@@ -95,6 +95,7 @@ class Game extends React.Component<Props, State> {
                 return (
                   <div key={i}>
                     <button
+                    className="AddToList-btn "
                       onClick={() => {
                         var r:Roll ={
                             PinsKnocked:pin+1,

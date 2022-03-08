@@ -1,8 +1,8 @@
-import { json } from "stream/consumers";
+import { ApiData } from "../Config/Constant";
 import { IContestant, Roll } from "../Interfaces/Interfaces";
 
 export class ApiService {
-  hostURL: string = "https://localhost:5001/";
+  hostURL: string = ApiData.URL;
 
   headers: any = {
     "Content-Type": "application/json",
@@ -23,21 +23,6 @@ export class ApiService {
         return err;
       });
   }
-
-  // async AddContestants(roll: IContestant[]): Promise<any> {
-  //   return await fetch(api.hostURL + "api/bowling/addcontestants", {
-  //     method: "POST",
-  //     body: roll,
-  //     headers: { "Content-Type": "application/json" },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       return data;
-  //     })
-  //     .catch((err) => {
-  //       return err;
-  //     });
-  // }
 
   AddContestants(
     Contestants: IContestant[],
