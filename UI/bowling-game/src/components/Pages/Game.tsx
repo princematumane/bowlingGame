@@ -3,19 +3,14 @@ import "../../App.css";
 import { api } from "../../Services/ApiService";
 import List from "../List";
 import AddToList from "../AddContestantToList";
-import { IContestant, IContestantInfo, Roll } from "../../Interfaces/Interfaces";
+import { IContestant, IContestantInfo, ICurrentPlayingContestant, Roll } from "../../Interfaces/Interfaces";
 import Table from "../Table";
 import Constants from "../../Config/Constant";
 
 interface State {
   contestants: IContestantInfo[];
   isGameStarted: boolean;
-  currentPlayingContestant: {
-    index: number;
-    rolls: number[];
-    numberOfTimesPlayed: number;
-    remainingPins: number;
-  };
+  currentPlayingContestant: ICurrentPlayingContestant;
   pins: number[];
 }
 interface Props {}
@@ -72,8 +67,7 @@ class Game extends React.Component<Props, State> {
   }
 
   data = (contestants: IContestantInfo[]) => {
-
-    if(this.state.currentPlayingContestant.index >= contestants.length){
+    if(contestants.length > 0 && this.state.currentPlayingContestant.index >= contestants.length){
         window.location.href ="/LeaderBoard"
         return <>
         All members played
@@ -83,27 +77,30 @@ class Game extends React.Component<Props, State> {
       <div className="App">
         {contestants.length > 1 ? (
           <>
-            <List contestant={contestants} />
+            <List contestant={contestants} currentPlayingContestant={this.state.currentPlayingContestant} />
             {/* <Table
               contestants={contestants}
               frames={this.state.chances}
               isGameStarted={this.state.isGameStarted}
             /> */}
+             <h4>{contestants[this.state.currentPlayingContestant.index].contestantName} is now playing</h4>
             <p>
               Knock down{" "}
               {this.state.pins.map((pin, i) => {
                 return (
                   <div key={i}>
                     <button
-                    className="AddToList-btn "
+                   className="button roll-btn"
                       onClick={() => {
                         var r:Roll ={
                             PinsKnocked:pin+1,
                             contestantName: contestants[this.state.currentPlayingContestant.index].contestantName
                         }
                         api.Roll(r).then((res) =>{
-                            console.log(res)
+                            console.log(res);
                         })
+                        contestants[this.state.currentPlayingContestant.index].pinsLeft = contestants[this.state.currentPlayingContestant.index].pinsLeft - r.PinsKnocked;
+                        this.setState({contestants});
                         var cState = { ...this.state.currentPlayingContestant };
                         cState.rolls.push(pin);
                         cState.remainingPins -= (pin);

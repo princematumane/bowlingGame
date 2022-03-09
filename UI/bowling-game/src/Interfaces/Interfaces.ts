@@ -20,3 +20,10 @@ export interface Leader extends IContestant {
   Score: number;
   ScoreFrame: number;
 }
+
+export interface ICurrentPlayingContestant {
+  index: number;
+  rolls: number[];
+  numberOfTimesPlayed: number;
+  remainingPins: number;
+}

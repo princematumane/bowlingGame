@@ -141,3 +141,29 @@
   background-color: #0b5468;
   color: white;
 }
+
+.button {
+  background-color: #0b5468;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.roll-btn {
+  background-color: #0b5468;
+  color: black;
+  border: 2px solid #0b5468;
+  border-radius: 10px;
+}
+
+.roll-btn:hover {
+  background-color: #3595af;
+  color: white;
+}

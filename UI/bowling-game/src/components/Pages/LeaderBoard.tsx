@@ -40,7 +40,7 @@ class LeaderBoard extends React.Component<Props, State> {
                     <tr key={index}>
                     <td>{contestant.contestantName}</td>
                     <td>{contestant.score}</td>
-                    <td>{contestant.scoreboard}</td>
+                    <td>{contestant.scoreFrame}</td>
                   </tr>
                 );
               })}

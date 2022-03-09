@@ -23,7 +23,7 @@ const Home = () => {
         window.location.href = "/game";
       }
     } ,  error =>{
-
+      
     })
   };
 

@@ -55,7 +55,7 @@ namespace BowlingGame.Web.Models
         {
             return ScoringData[rollIndex].Score + ScoringData[rollIndex + 1].Score;
         }
-
+        
         private int GetStrikeScore(int rollIndex)
         {
             return ScoringData[rollIndex].Score + ScoringData[rollIndex + 1].Score + ScoringData[rollIndex + 2].Score;

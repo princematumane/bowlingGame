@@ -1,18 +1,19 @@
 import React from 'react'
-import { IState as Props } from "../components/Pages/Home";
-import { IContestantInfo } from '../Interfaces/Interfaces';
+import { IContestantInfo, ICurrentPlayingContestant } from '../Interfaces/Interfaces';
 
 interface IProps {
     contestant: IContestantInfo[]
+    currentPlayingContestant:ICurrentPlayingContestant
 }
 
-const List: React.FC<IProps> = ({ contestant }) => {
+const List: React.FC<IProps> = ({ contestant ,currentPlayingContestant}) => {
     const renderList = (): JSX.Element[] => {
       return contestant.map((c, i) => {
         return (
           <tr key={i}>
             <td>{c.contestantName}</td>
             <td>{c.pinsLeft}</td>
+            <td>{(i == currentPlayingContestant.index) ? currentPlayingContestant.numberOfTimesPlayed : 0}</td>
           </tr>
         );
       });
@@ -25,6 +26,7 @@ const List: React.FC<IProps> = ({ contestant }) => {
           <tr>
             <th>Name</th>
             <th>Pins Left</th>
+            <th>Number Of Times Played</th>
           </tr>
             {renderList()}
       </table>
