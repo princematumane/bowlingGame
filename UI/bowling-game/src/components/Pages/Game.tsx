@@ -27,7 +27,7 @@ class Game extends React.Component<Props, State> {
 
   setTotalPins(remmainingPins: number) {
     let pins: number[] = [];
-    for (let index = 0; index < remmainingPins; index++) {
+    for (let index = 1; index < remmainingPins + 1; index++) {
       pins.push(index);
     }
     this.setState({
@@ -93,7 +93,7 @@ class Game extends React.Component<Props, State> {
                    className="button roll-btn"
                       onClick={() => {
                         var r:Roll ={
-                            PinsKnocked:pin+1,
+                            PinsKnocked:pin,
                             contestantName: contestants[this.state.currentPlayingContestant.index].contestantName
                         }
                         api.Roll(r).then((res) =>{
@@ -114,7 +114,7 @@ class Game extends React.Component<Props, State> {
                         
                       }}
                     >
-                      {pin+1}
+                      {pin}
                     </button>
                   </div>
                 );
