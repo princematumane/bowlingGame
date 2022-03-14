@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../App.css";
 import { api } from "../../Services/ApiService";
-import { IContestant, Leader } from "../../Interfaces/Interfaces";
+import { Leader } from "../../Interfaces/Interfaces";
 
 interface State {
   LeaderBoardData: Leader[];
@@ -29,6 +29,9 @@ class LeaderBoard extends React.Component<Props, State> {
       <div className="App">
         {LeaderBoardData.length > 1 ? (
           <div>
+            <h1>
+             Game Leader Board.
+            </h1>
             <table id="contestants">
               <tr>
                 <th>Contestant Name</th>

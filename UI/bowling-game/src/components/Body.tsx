@@ -39,7 +39,6 @@ export class Body extends React.Component<Props, State> {
       renderRow(contestant:any, index:number) {
         if(this.props){
           let frames = this.framesForPlayer(this.props.frames, index, Constants.MAX_FRAMES);
-        
           let rolls = frames.map(this.renderFrameCell);
           let score = 0 ; //api.getScore;
           return (

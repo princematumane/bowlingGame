@@ -3,7 +3,12 @@ import "../../App.css";
 import { api } from "../../Services/ApiService";
 import List from "../List";
 import AddToList from "../AddContestantToList";
-import { IContestant, IContestantInfo, ICurrentPlayingContestant, Roll } from "../../Interfaces/Interfaces";
+import {
+  IContestant,
+  IContestantInfo,
+  ICurrentPlayingContestant,
+  Roll,
+} from "../../Interfaces/Interfaces";
 import Table from "../Table";
 import Constants from "../../Config/Constant";
 
@@ -31,7 +36,7 @@ class Game extends React.Component<Props, State> {
       pins.push(index);
     }
     this.setState({
-      pins
+      pins,
     });
   }
 
@@ -39,7 +44,7 @@ class Game extends React.Component<Props, State> {
     index: 0,
     numberOfTimesPlayed: 0,
     remainingPins: Constants.MAX_PINS,
-    rolls:[],
+    rolls: [],
   };
 
   componentDidMount() {
@@ -50,68 +55,88 @@ class Game extends React.Component<Props, State> {
         });
       }
     });
-    this.setTotalPins(Constants.MAX_PINS)
+    this.setTotalPins(Constants.MAX_PINS);
   }
 
-  validateNumberOfRolls(){
+  validateNumberOfRolls() {
     if (
-        this.state.currentPlayingContestant.rolls.length ==
-        Constants.ROLLS_PER_FRAME
-      ) {
-        this.initialStateOfContestant.index++;
-        this.initialStateOfContestant.rolls = [];
-          this.setState({currentPlayingContestant: this.initialStateOfContestant} , () =>{
-                this.setTotalPins(Constants.MAX_PINS)
-          })
-      }
+      this.state.currentPlayingContestant.rolls.length ==
+      Constants.ROLLS_PER_FRAME
+    ) {
+      this.initialStateOfContestant.index++;
+      this.initialStateOfContestant.rolls = [];
+      this.setState(
+        { currentPlayingContestant: this.initialStateOfContestant },
+        () => {
+          this.setTotalPins(Constants.MAX_PINS);
+        }
+      );
+    }
   }
 
   data = (contestants: IContestantInfo[]) => {
-    if(contestants.length > 0 && this.state.currentPlayingContestant.index >= contestants.length){
-        window.location.href ="/LeaderBoard"
-        return <>
-        All members played
-        </>
+    if (
+      contestants.length > 0 &&
+      this.state.currentPlayingContestant.index >= contestants.length
+    ) {
+      window.location.href = "/LeaderBoard";
+      return <>All members played</>;
     }
     return (
       <div className="App">
         {contestants.length > 1 ? (
           <>
-            <List contestant={contestants} currentPlayingContestant={this.state.currentPlayingContestant} />
+            <List
+              contestant={contestants}
+              numberOfTimesPlayed={this.state.currentPlayingContestant.numberOfTimesPlayed}
+            />
             {/* <Table
               contestants={contestants}
               frames={this.state.chances}
               isGameStarted={this.state.isGameStarted}
             /> */}
-             <h4>{contestants[this.state.currentPlayingContestant.index].contestantName} is now playing</h4>
+            <h4>
+              {
+                contestants[this.state.currentPlayingContestant.index]
+                  .contestantName
+              }{" "}
+              is now playing
+            </h4>
             <p>
               Knock down{" "}
               {this.state.pins.map((pin, i) => {
                 return (
                   <div key={i}>
                     <button
-                   className="button roll-btn"
+                      className="button roll-btn"
                       onClick={() => {
-                        var r:Roll ={
-                            PinsKnocked:pin,
-                            contestantName: contestants[this.state.currentPlayingContestant.index].contestantName
-                        }
-                        api.Roll(r).then((res) =>{
-                            console.log(res);
-                        })
-                        contestants[this.state.currentPlayingContestant.index].pinsLeft = contestants[this.state.currentPlayingContestant.index].pinsLeft - r.PinsKnocked;
-                        this.setState({contestants});
+                        var r: Roll = {
+                          PinsKnocked: pin,
+                          contestantName:
+                            contestants[
+                              this.state.currentPlayingContestant.index
+                            ].contestantName,
+                        };
+                        api.Roll(r).then((res) => {
+                          console.log(res);
+                        });
+                        contestants[
+                          this.state.currentPlayingContestant.index
+                        ].pinsLeft =
+                          contestants[this.state.currentPlayingContestant.index]
+                            .pinsLeft - r.PinsKnocked;
+                        this.setState({ contestants });
                         var cState = { ...this.state.currentPlayingContestant };
                         cState.rolls.push(pin);
-                        cState.remainingPins -= (pin);
+                        cState.remainingPins -= pin;
                         cState.numberOfTimesPlayed++;
-                        this.setTotalPins(cState.remainingPins)
+                        this.setTotalPins(cState.remainingPins);
                         this.setState(
-                          { currentPlayingContestant: cState } , () =>{
+                          { currentPlayingContestant: cState },
+                          () => {
                             this.validateNumberOfRolls();
                           }
                         );
-                        
                       }}
                     >
                       {pin}
