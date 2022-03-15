@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  IContestantInfo,
-  ICurrentPlayingContestant,
+  IContestantInfo
 } from "../Interfaces/Interfaces";
 
 interface IProps {

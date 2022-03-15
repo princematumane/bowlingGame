@@ -95,18 +95,18 @@ class Game extends React.Component<Props, State> {
               frames={this.state.chances}
               isGameStarted={this.state.isGameStarted}
             /> */}
-            <h4>
+            <h3>
               {
                 contestants[this.state.currentPlayingContestant.index]
                   .contestantName
               }{" "}
               is now playing
-            </h4>
+            </h3>
             <p>
               Knock down{" "}
               {this.state.pins.map((pin, i) => {
                 return (
-                  <div key={i}>
+                  <div key={i} className="container-btn">
                     <button
                       className="button roll-btn"
                       onClick={() => {

@@ -59,6 +59,14 @@ namespace BowlingGame.Web.Controllers
             return Ok(_bowlingGame.GetLeaderboard());
         }
 
+        [HttpPost]
+        [Route("individualScore")]
+        public IActionResult GetIdividualScore(){
+
+
+            return Ok();
+        }
+
         [HttpGet]
         [Route("hasexisting")]
         public IActionResult CheckExistingGame()
