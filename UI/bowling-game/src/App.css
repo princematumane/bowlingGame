@@ -37,6 +37,12 @@
   }
 }
 
+#game {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .List {
   list-style: none;
   display: flex;

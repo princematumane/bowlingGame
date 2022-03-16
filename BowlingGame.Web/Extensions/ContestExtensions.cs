@@ -25,23 +25,10 @@ namespace BowlingGame.Web.Extensions
 
             return contestant.IsInstanceComplete ? - 1 : pins;
         }
-
+            
         public static IEnumerable<LeaderboardData> GetLeaderboard(this IContest contest)
         {
-            for (int i = 0; i < contest.Contestants.Count; i++)
-            {
-                rollMany(contest.Contestants[i], contest.Contestants[i].PinsLeft());
-            }
-
             return contest.Contestants.Select(x => new LeaderboardData { ContestantName = x.ContestantName, Score = x.GetScore(), ScoreFrame = x.GetLastScoredFrame() }).OrderByDescending(x => x.Score);
-        }
-
-        private static void rollMany(IContestant contest,int pins)
-        {
-            for (int i = 0; i < 18; i++)
-            {
-                contest.Roll(pins);
-            }
         }
 
         public static void Reset(this IContest contest)

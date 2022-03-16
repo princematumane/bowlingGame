@@ -23,7 +23,8 @@ export interface Leader extends IContestant {
 
 export interface ICurrentPlayingContestant {
   index: number;
-  rolls: number[];
+  rolls: any[];
   numberOfTimesPlayed: number;
   remainingPins: number;
+  contestantName?: string;
 }

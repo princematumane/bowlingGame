@@ -59,12 +59,14 @@ namespace BowlingGame.Web.Controllers
             return Ok(_bowlingGame.GetLeaderboard());
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("individualScore")]
-        public IActionResult GetIdividualScore(){
+        public IActionResult GetIdividualScore(string contestantName)
+        {
+            if (string.IsNullOrEmpty(contestantName))
+                throw new Exception($"{nameof(contestantName)} cannot be null or empty");
 
-
-            return Ok();
+            return Ok(_bowlingGame.Contestants.Select(x => x.ContestantName == contestantName));
         }
 
         [HttpGet]

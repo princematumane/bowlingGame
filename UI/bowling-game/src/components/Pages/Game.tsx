@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import "../../App.css";
 import { api } from "../../Services/ApiService";
-import List from "../List";
-import AddToList from "../AddContestantToList";
 import {
-  IContestant,
   IContestantInfo,
   ICurrentPlayingContestant,
   Roll,
@@ -15,8 +12,10 @@ import Constants from "../../Config/Constant";
 interface State {
   contestants: IContestantInfo[];
   isGameStarted: boolean;
-  currentPlayingContestant: ICurrentPlayingContestant;
+  framesData: any[];
   pins: number[];
+  frameIndex:number,
+  currentPlayingContestant: ICurrentPlayingContestant
 }
 interface Props {}
 class Game extends React.Component<Props, State> {
@@ -25,27 +24,21 @@ class Game extends React.Component<Props, State> {
     this.state = {
       contestants: [],
       isGameStarted: false,
-      currentPlayingContestant: this.initialStateOfContestant,
+      framesData: [],
+      frameIndex:1,
       pins: [],
+      currentPlayingContestant: this.initialStateOfContestant
     };
   }
 
-  setTotalPins(remmainingPins: number) {
-    let pins: number[] = [];
-    for (let index = 1; index < remmainingPins + 1; index++) {
-      pins.push(index);
-    }
-    this.setState({
-      pins,
-    });
-  }
-
-  initialStateOfContestant = {
+  initialStateOfContestant: ICurrentPlayingContestant = {
     index: 0,
     numberOfTimesPlayed: 0,
     remainingPins: Constants.MAX_PINS,
     rolls: [],
+    contestantName: ''
   };
+   frame:any[] = [] ; 
 
   componentDidMount() {
     api.Getcontestants().then((x) => {
@@ -58,116 +51,122 @@ class Game extends React.Component<Props, State> {
     this.setTotalPins(Constants.MAX_PINS);
   }
 
+  setTotalPins(remmainingPins: number) {
+    let pins: number[] = [];
+    for (let index = 1; index < remmainingPins + 1; index++) {
+      pins.push(index);
+    }
+    this.setState({
+      pins,
+    });
+  }
+
+  handleRollClick = (
+    pin: number,
+    contestant: IContestantInfo
+  ) => {
+    var r: Roll = {
+      PinsKnocked: pin,
+      contestantName:contestant.contestantName,
+    };
+    api.Roll(r).then(
+      (res) => {
+        //handle api response and show appropriate message
+        console.log(res);
+      },
+      (err) => {
+        //handle any api error response
+        console.log(err);
+      }
+    );
+    contestant.pinsLeft = contestant.pinsLeft - r.PinsKnocked;
+    var cState = { ...this.state.currentPlayingContestant };
+    cState.rolls.push(pin);
+    cState.remainingPins -= pin;
+    cState.numberOfTimesPlayed++;
+    this.setTotalPins(cState.remainingPins);
+    this.setState({ currentPlayingContestant: cState }, () => {
+      this.validateNumberOfRolls();
+    });
+  };
+
   validateNumberOfRolls() {
     if (
-      this.state.currentPlayingContestant.rolls.length ==
+      this.state.currentPlayingContestant.rolls.length ===
       Constants.ROLLS_PER_FRAME
     ) {
-      this.initialStateOfContestant.index++;
+        this.frame.push(this.state.currentPlayingContestant.rolls);
+      if(this.initialStateOfContestant.index === this.state.contestants.length -1){
+        var framesDataCopy = this.state.framesData;
+        framesDataCopy.push(this.frame);
+        this.setState({framesData:framesDataCopy})
+        this.frame = [];
+        this.initialStateOfContestant.index = 0;
+      }else{
+        this.initialStateOfContestant.index++;
+      }
       this.initialStateOfContestant.rolls = [];
       this.setState(
         { currentPlayingContestant: this.initialStateOfContestant },
         () => {
           this.setTotalPins(Constants.MAX_PINS);
-        }
-      );
+        } );
     }
   }
 
-  data = (contestants: IContestantInfo[]) => {
-    if (
-      contestants.length > 0 &&
-      this.state.currentPlayingContestant.index >= contestants.length
-    ) {
-      window.location.href = "/LeaderBoard";
-      return <>All members played</>;
-    }
+  gamePlaying() {
+      var playingContestant = this.state.contestants[this.state.currentPlayingContestant.index];
+      if(!playingContestant){
+        return <>
+        <span>No playing Contestant</span>
+        </>
+      }
     return (
-      <div className="App">
-        {contestants.length > 1 ? (
-          <>
-            <List
-              contestant={contestants}
-              numberOfTimesPlayed={this.state.currentPlayingContestant.numberOfTimesPlayed}
-            />
-            {/* <Table
-              contestants={contestants}
-              frames={this.state.chances}
-              isGameStarted={this.state.isGameStarted}
-            /> */}
-            <h3>
-              {
-                contestants[this.state.currentPlayingContestant.index]
-                  .contestantName
-              }{" "}
-              is now playing
-            </h3>
-            <p>
-              Knock down{" "}
-              {this.state.pins.map((pin, i) => {
-                return (
-                  <div key={i} className="container-btn">
-                    <button
-                      className="button roll-btn"
-                      onClick={() => {
-                        var r: Roll = {
-                          PinsKnocked: pin,
-                          contestantName:
-                            contestants[
-                              this.state.currentPlayingContestant.index
-                            ].contestantName,
-                        };
-                        api.Roll(r).then((res) => {
-                          console.log(res);
-                        });
-                        contestants[
-                          this.state.currentPlayingContestant.index
-                        ].pinsLeft =
-                          contestants[this.state.currentPlayingContestant.index]
-                            .pinsLeft - r.PinsKnocked;
-                        this.setState({ contestants });
-                        var cState = { ...this.state.currentPlayingContestant };
-                        cState.rolls.push(pin);
-                        cState.remainingPins -= pin;
-                        cState.numberOfTimesPlayed++;
-                        this.setTotalPins(cState.remainingPins);
-                        this.setState(
-                          { currentPlayingContestant: cState },
-                          () => {
-                            this.validateNumberOfRolls();
-                          }
-                        );
-                      }}
-                    >
-                      {pin}
-                    </button>
-                  </div>
-                );
-              })}
-              pins
-            </p>
-          </>
-        ) : (
-          <>
-            <h1>No contestans found.</h1>
-            <span>
-              Please add contestants on the{" "}
-              <a
-                onClick={() => {
-                  window.location.href = "/";
-                }}
-              >
-                Home Page
-              </a>
-            </span>
-          </>
-        )}
+      <div id="game">
+        <h2>
+          {
+           playingContestant.contestantName
+          }{" "}
+        </h2>
+        <h4>is now playing.</h4>
+        <p>
+          Knock down{" "}
+          {this.state.pins.map((pin, i) => {
+            return (
+              <div key={i} className="container-btn">
+                <button
+                  className="button roll-btn"
+                  onClick={() => {
+                    this.handleRollClick(pin,playingContestant);
+                  }}
+                >
+                  {pin}
+                </button>
+              </div>
+            );
+          })}
+          {" "}
+          pins
+        </p>
       </div>
     );
-  };
+  }
+
   render() {
-    return <div>{this.data(this.state.contestants)}</div>;
+    //When all the members has played for all the frames
+    if (this.state.framesData.length == Constants.MAX_FRAMES) {
+      window.location.href = "/LeaderBoard";
+    }
+    return (
+      <>
+        <Table
+          contestants={this.state.contestants}
+          frames={this.state.framesData}
+          isGameStarted={this.state.isGameStarted}
+        />
+        {this.state.contestants.length > 1 ? this.gamePlaying() : null}
+      </>
+    );
   }
 }
-
 export default Game;
