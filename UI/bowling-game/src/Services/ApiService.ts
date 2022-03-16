@@ -60,6 +60,24 @@ export class ApiService {
       });
   }
 
+  async GetindividualScore(contestantName: string): Promise<any> {
+    return await fetch(
+      api.hostURL +
+        `api/bowling/individualScore?contestantName=${contestantName}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((err) => {
+        return err;
+      });
+  }
+
   async Getcontestants(): Promise<any> {
     return await fetch(api.hostURL + "api/bowling/getcontestants", {
       method: "GET",
